@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { registerUser, loginUser } from "../services/auth.service.js";
+import { generateToken } from "../utils/jwt.js";
 
 export async function register (req:Request, res:Response): Promise<void> {
 
@@ -38,6 +39,19 @@ export const login = async (
     const { email, password } = req.body;
 
     const user = await loginUser(email, password);
+
+    //if user is returned successfully then only jwt is generated else
+        //catch block would have run here
+    const token = generateToken(user._id.toString()); //userId is passed
+
+    //send this jwt to browser as a cookie called token
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+    });
+    //cookie is for 7 days (in milliseconds)
 
     res.status(200).json({
       message: "Login successful",
