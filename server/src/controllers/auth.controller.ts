@@ -2,12 +2,11 @@ import { Request, Response } from "express";
 import { registerUser, loginUser } from "../services/auth.service.js";
 import { generateToken } from "../utils/jwt.js";
 
-export async function register (req:Request, res:Response): Promise<void> {
-
-    try{
-        const {name, email, password} = req.body;
-        //send it to registerUser() service function
-        const user = await registerUser({
+export async function register(req: Request, res: Response): Promise<void> {
+  try {
+    const { name, email, password } = req.body;
+    //send it to registerUser() service function
+    const user = await registerUser({
       name,
       email,
       password,
@@ -22,26 +21,21 @@ export async function register (req:Request, res:Response): Promise<void> {
         email: user.email,
       },
     });
-
-    } catch(error){
-        res.status(400).json({
+  } catch (error) {
+    res.status(400).json({
       message: error instanceof Error ? error.message : "Registration failed",
     });
-
-    }
+  }
 }
 
-export const login = async (
-  req: Request,
-  res: Response
-): Promise<void> => {
+export const login = async (req: Request, res: Response): Promise<void> => {
   try {
     const { email, password } = req.body;
 
     const user = await loginUser(email, password);
 
     //if user is returned successfully then only jwt is generated else
-        //catch block would have run here
+    //catch block would have run here
     const token = generateToken(user._id.toString()); //userId is passed
 
     //send this jwt to browser as a cookie called token
