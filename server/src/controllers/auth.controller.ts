@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { registerUser, loginUser } from "../services/auth.service.js";
 import { generateToken } from "../utils/jwt.js";
+import User from "../models/user.model.js";
 
 export async function register(req: Request, res: Response): Promise<void> {
   try {
@@ -58,6 +59,30 @@ export const login = async (req: Request, res: Response): Promise<void> => {
   } catch (error) {
     res.status(401).json({
       message: error instanceof Error ? error.message : "Login failed",
+    });
+  }
+};
+
+export const getMe = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    const user = await User.findById(req.userId).select("-password");
+
+    if (!user) {
+      res.status(404).json({
+        message: "User not found",
+      });
+      return;
+    }
+
+    res.status(200).json({
+      user,
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: "Failed to get user",
     });
   }
 };
