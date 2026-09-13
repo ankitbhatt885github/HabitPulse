@@ -23,3 +23,21 @@ export async function createHabit(
 
   return habit;
 }
+
+export async function getHabits(userId: string) {
+    //return habits for the authenticated user with newly created first
+    const habits = await Habit.find({user: userId}).sort({
+        createdAt: -1,
+    })
+    return habits;
+}
+
+export async function getHabitById(habitId:string, userId:string) {
+    const habit = await Habit.findOne({
+        _id: habitId,
+        user: userId,
+    });
+
+    return habit;
+
+}

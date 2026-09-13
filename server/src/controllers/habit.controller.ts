@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { createHabit } from "../services/habit.service.js";
+import { createHabit, getHabits, getHabitById } from "../services/habit.service.js";
 
 export async function create(req: Request, res: Response): Promise<void> {
   try {
@@ -30,4 +30,55 @@ export async function create(req: Request, res: Response): Promise<void> {
         error instanceof Error ? error.message : "Failed to create habit",
     });
   }
+}
+
+export async function getAll(req: Request, res: Response): Promise<void> {
+  try {
+    if (!req.userId) {
+      res.status(401).json({
+        message: "Not authenticated",
+      });
+      return;
+    }
+    //call the service function
+    const habits = await getHabits(req.userId);
+
+    res.status(200).json({
+      habits,
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: "Failed to fetch habits",
+    });
+  }
+}
+
+export async function getOne(req:Request, res:Response){
+    try{
+        if (!req.userId) {
+      res.status(401).json({
+        message: "Not authenticated",
+      });
+      return;
+    }
+
+    const {id} = req.params;
+    const habit = await getHabitById(id, req.userId);
+
+    if (!habit) {
+      res.status(404).json({
+        message: "Habit not found",
+      });
+      return;
+    }
+
+    res.status(200).json({
+      habit,
+    });
+
+    } catch(error){
+        res.status(500).json({
+            message: "failed to fetch habit",
+        })
+    }
 }
