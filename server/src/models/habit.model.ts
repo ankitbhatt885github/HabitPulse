@@ -5,7 +5,7 @@ export interface IHabit extends Document {
   user: mongoose.Types.ObjectId;
   name: string;
   description?: string;
-  frequence: HabitFrequency;
+  frequency: HabitFrequency;
   color?: string;
   isActive: boolean;
 }
