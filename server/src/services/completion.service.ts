@@ -22,3 +22,26 @@ export async function completeHabit(habitId: string, userId: string) {
 
   return completion;
 }
+
+export async function getHabitCompletions(habitId: string, userId: string) {
+  //find habit completions for specific habit belonging to the user
+  const habit = await Habit.findOne({
+    _id: habitId,
+    user: userId,
+  });
+
+  //find is there a habit
+
+  if (!habit) {
+    throw new Error("Habit not found");
+  }
+
+  const completions = await HabitCompletion.find({
+    habit: habitId,
+    user: userId,
+  }).sort({
+    date: -1,
+  });
+
+  return completions;
+}

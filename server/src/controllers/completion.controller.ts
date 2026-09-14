@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { completeHabit } from "../services/completion.service.js";
+import { completeHabit, getHabitCompletions } from "../services/completion.service.js";
 
 export async function complete(req: Request, res: Response) {
   try {
@@ -24,6 +24,30 @@ export async function complete(req: Request, res: Response) {
     res.status(400).json({
       message:
         error instanceof Error ? error.message : "Failed to complete habit",
+    });
+  }
+}
+
+export async function getHistory(req: Request, res: Response) {
+  try {
+    if (!req.userId) {
+      res.status(401).json({
+        message: "Not authenticated",
+      });
+      return;
+    }
+    //find habitId
+    const { id } = req.params;
+
+    const completions = await getHabitCompletions(id, req.userId);
+
+    res.status(200).json({
+      completions,
+    });
+  } catch (error) {
+    res.status(404).json({
+      message:
+        error instanceof Error ? error.message : "Failed to fetch completions",
     });
   }
 }
