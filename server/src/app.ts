@@ -2,6 +2,7 @@ import express from "express";
 import cookieParser from "cookie-parser";
 import authRoutes from "./routes/auth.routes.js";
 import habitRoutes from "./routes/habit.routes.js";
+import completionRoutes from "./routes/completion.routes.js";
 
 const app = express();
 
@@ -10,6 +11,7 @@ app.use(cookieParser());
 
 app.use("/api/auth", authRoutes);
 app.use("/api/habits", habitRoutes);
+app.use("/api", completionRoutes);
 
 app.get("/", (req, res) => {
   res.json({
