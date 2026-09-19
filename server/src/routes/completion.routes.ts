@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { complete, getHistory, uncomplete } from "../controllers/completion.controller.js";
+import { complete, getHistory, uncomplete, getStreak } from "../controllers/completion.controller.js";
 import { protect } from "../middleware/auth.middleware.js";
 
 const router = Router();
@@ -11,5 +11,6 @@ router.delete(
   protect,
   uncomplete
 );
+router.get("/habits/:id/streak", protect, getStreak);
 
 export default router;
