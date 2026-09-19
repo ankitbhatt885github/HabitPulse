@@ -45,3 +45,16 @@ export async function getHabitCompletions(habitId: string, userId: string) {
 
   return completions;
 }
+
+export async function uncompleteHabit(habitId: string,
+  userId: string){
+    const today = new Date().toISOString().split("T")[0];
+
+  const completion = await HabitCompletion.findOneAndDelete({
+    habit: habitId,
+    user: userId,
+    date: today,
+  });
+
+  return completion;
+}

@@ -1,5 +1,9 @@
 import { Request, Response } from "express";
-import { completeHabit, getHabitCompletions } from "../services/completion.service.js";
+import {
+  completeHabit,
+  getHabitCompletions,
+  uncompleteHabit,
+} from "../services/completion.service.js";
 
 export async function complete(req: Request, res: Response) {
   try {
@@ -48,6 +52,37 @@ export async function getHistory(req: Request, res: Response) {
     res.status(404).json({
       message:
         error instanceof Error ? error.message : "Failed to fetch completions",
+    });
+  }
+}
+
+export async function uncomplete(req: Request, res: Response) {
+  try {
+    if (!req.userId) {
+      res.status(401).json({
+        message: "Not authenticated",
+      });
+      return;
+    }
+    const { id } = req.params;
+
+
+    const completion = await uncompleteHabit(id, req.userId);
+
+    if (!completion) {
+      res.status(404).json({
+        message: "Habit is not completed today",
+      });
+      return;
+    }
+
+    res.status(200).json({
+      message: "Habit marked as incomplete",
+    });
+  } catch (error) {
+    res.status(400).json({
+      message:
+        error instanceof Error ? error.message : "Failed to uncomplete habit",
     });
   }
 }
