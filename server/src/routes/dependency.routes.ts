@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { create } from "../controllers/dependency.controller.js";
+import { create, getAll, remove } from "../controllers/dependency.controller.js";
 import { protect } from "../middleware/auth.middleware.js";
 
 const router = Router();
@@ -9,5 +9,7 @@ router.post(
   protect,
   create
 );
+router.get("/habits/:id/dependencies", protect, getAll);
+router.delete("/habits/:id/dependencies/:dependencyId",protect,remove)
 
 export default router;

@@ -34,3 +34,37 @@ export async function createDependency(
 
   return dependency;
 }
+
+export async function getDependencies(habitId: string,
+  userId: string){
+    const habit = await Habit.findOne({
+    _id: habitId,
+    user: userId,
+  });
+
+  if (!habit) {
+    throw new Error("Habit not found");
+  }
+
+  //also get more info
+  const dependencies = await HabitDependency.find({
+    habit: habitId,
+    user: userId,
+  }).populate("dependsOn", "name description frequency color");
+
+  return dependencies;
+}
+
+export async function deleteDependency (
+  habitId: string,
+  dependencyId: string,
+  userId: string
+){
+  const dependency = await HabitDependency.findOneAndDelete({
+    _id: dependencyId,
+    habit: habitId,
+    user: userId,
+  });
+
+  return dependency;
+};
