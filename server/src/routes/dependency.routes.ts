@@ -1,12 +1,15 @@
 import { Router } from "express";
 import { create, getAll, remove } from "../controllers/dependency.controller.js";
 import { protect } from "../middleware/auth.middleware.js";
+import { validate } from "../middleware/validate.middleware.js";
+import { dependencySchema } from "../utils/validation.js";
 
 const router = Router();
 
 router.post(
   "/habits/:id/dependencies",
   protect,
+  validate(dependencySchema),
   create
 );
 router.get("/habits/:id/dependencies", protect, getAll);
