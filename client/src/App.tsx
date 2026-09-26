@@ -1,10 +1,23 @@
+import { Navigate, Route, Routes } from "react-router-dom";
+import Login from "./pages/Login";
+import Register from "./pages/Register";
+import Dashboard from "./pages/Dashboard";
+
+
 function App() {
   return (
-    <div className="min-h-screen flex items-center justify-center">
-      <h1 className="text-4xl font-bold">
-        HabitPulse
-      </h1>
-    </div>
+    <Routes>
+      <Route path="/login" element={<Login />} />
+
+      <Route path="/register" element={<Register />} />
+
+      <Route path="/dashboard" element={<Dashboard />} />
+
+      <Route
+        path="*"
+        element={<Navigate to="/login" replace />}
+      />
+    </Routes>
   );
 }
 
