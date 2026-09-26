@@ -1,5 +1,6 @@
 import HabitCompletion from "../models/habitCompletion.model.js";
 import Habit from "../models/habit.model.js";
+import { getTodayDate } from "../utils/date.js";
 
 export async function completeHabit(habitId: string, userId: string) {
   const habit = await Habit.findOne({
@@ -12,7 +13,7 @@ export async function completeHabit(habitId: string, userId: string) {
   }
 
   //split date into year-month-date format
-  const today = new Date().toISOString().split("T")[0];
+  const today = getTodayDate();
 
   const completion = await HabitCompletion.create({
     habit: habitId,
@@ -47,7 +48,7 @@ export async function getHabitCompletions(habitId: string, userId: string) {
 }
 
 export async function uncompleteHabit(habitId: string, userId: string) {
-  const today = new Date().toISOString().split("T")[0];
+  const today = getTodayDate();
 
   const completion = await HabitCompletion.findOneAndDelete({
     habit: habitId,
@@ -81,16 +82,17 @@ export async function getHabitStreak(habitId: string, userId: string) {
     completions.map((completion) => completion.date),
   );
 
-  const today = new Date();
-  const todayString = today.toISOString().split("T")[0];
-
+  const currentDate = new Date();
   let currentStreak = 0;
 
-  let currentDate = new Date(today);
 
   //find current streak
   while (true) {
-    const dateString = currentDate.toISOString().split("T")[0];
+    const year = currentDate.getFullYear();
+    const month = String(currentDate.getMonth() + 1).padStart(2, "0");
+    const day = String(currentDate.getDate()).padStart(2, "0");
+
+    const dateString = `${year}-${month}-${day}`;
 
     if (!completionDates.has(dateString)) {
       break;
