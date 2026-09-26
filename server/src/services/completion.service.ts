@@ -1,6 +1,7 @@
 import HabitCompletion from "../models/habitCompletion.model.js";
 import Habit from "../models/habit.model.js";
 import { getTodayDate } from "../utils/date.js";
+import redis from "../config/redis.js";
 
 export async function completeHabit(habitId: string, userId: string) {
   const habit = await Habit.findOne({
@@ -20,6 +21,9 @@ export async function completeHabit(habitId: string, userId: string) {
     user: userId,
     date: today,
   });
+
+  // Clear dashboard cache because completion changed
+  await redis.del(`dashboard:${userId}`);
 
   return completion;
 }
@@ -55,6 +59,11 @@ export async function uncompleteHabit(habitId: string, userId: string) {
     user: userId,
     date: today,
   });
+
+  if (completion) {
+    // Clear dashboard cache because completion was removed
+    await redis.del(`dashboard:${userId}`);
+  }
 
   return completion;
 }

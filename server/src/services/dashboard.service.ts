@@ -1,7 +1,20 @@
 import Habit from "../models/habit.model.js";
 import HabitCompletion from "../models/habitCompletion.model.js";
+import redis from "../config/redis.js";
+import { getTodayDate } from "../utils/date.js";
 
 export async function getDashboard(userId: string) {
+
+    // Redis cache key for this user's dashboard
+  const cacheKey = `dashboard:${userId}`;
+
+  // Check if dashboard already exists in Redis
+  const cachedDashboard = await redis.get(cacheKey);
+
+  if (cachedDashboard) {
+    return cachedDashboard;
+  }
+
   //get currently active habits
   const habits = await Habit.find({
     user: userId,
@@ -10,7 +23,7 @@ export async function getDashboard(userId: string) {
     createdAt: -1,
   });
 
-  const today = new Date().toISOString().split("T")[0];
+  const today = getTodayDate();
 
   //count of todays completions
   const completedToday = await HabitCompletion.countDocuments({
@@ -24,13 +37,20 @@ export async function getDashboard(userId: string) {
   const completionRate =
     totalHabits === 0 ? 0 : Math.round((completedToday / totalHabits) * 100);
 
-  //return imp info
-  return {
+  // Create dashboard response all the imp info
+  const dashboard = {
     totalHabits,
     completedToday,
     completionRate,
     habits,
   };
+
+  // store this data in redis cache too -> for 60 seconds
+  await redis.set(cacheKey, dashboard, {
+    ex: 60,
+  });
+
+  return dashboard;
 }
 
 export async function getHabitStats(habitId: string, userId: string) {

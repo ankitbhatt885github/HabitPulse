@@ -1,4 +1,5 @@
 import Habit, { HabitFrequency } from "../models/habit.model.js";
+import redis from "../config/redis.js";
 
 interface CreateHabitData {
   userId: string;
@@ -18,6 +19,9 @@ export async function createHabit(data: CreateHabitData) {
     frequency,
     color,
   });
+
+  //delete from redis because habits are changes, new added
+  await redis.del(`dashboard:${userId}`);
 
   return habit;
 }
@@ -63,6 +67,11 @@ export async function updateHabit(
       runValidators: true,
     },
   );
+
+  if (habit) {
+    // Clear dashboard cache because habit changed
+    await redis.del(`dashboard:${userId}`);
+  }
   return habit;
 }
 
@@ -72,6 +81,11 @@ export async function deleteHabit(habitId: string, userId: string) {
     _id: habitId,
     user: userId,
   });
+
+  if (habit) {
+    // Clear dashboard cache because habit was deleted
+    await redis.del(`dashboard:${userId}`);
+  }
 
   return habit;
 }
