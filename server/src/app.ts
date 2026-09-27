@@ -1,5 +1,6 @@
 import express from "express";
 import cookieParser from "cookie-parser";
+import cors from "cors";
 import authRoutes from "./routes/auth.routes.js";
 import habitRoutes from "./routes/habit.routes.js";
 import completionRoutes from "./routes/completion.routes.js";
@@ -7,6 +8,13 @@ import dependencyRoutes from "./routes/dependency.routes.js";
 import dashboardRoutes from "./routes/dashboard.routes.js";
 
 const app = express();
+
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+    credentials: true,
+  })
+);
 
 app.use(express.json());
 app.use(cookieParser());
