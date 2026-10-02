@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import type { AppDispatch } from "../store/store";
 import { setUser } from "../store/authSlice";
 import { apiRequest } from "../services/api";
+import { Link } from "react-router-dom";
 
 
 
@@ -78,6 +79,15 @@ function Login() {
                 {isLoading ? "Logging in..." : "Login"}
             </button>
         </form>
+        <p className="mt-4 text-center">
+  Don't have an account?{" "}
+  <Link
+    to="/register"
+    className="underline"
+  >
+    Create one
+  </Link>
+</p>
       </div>
     </div>
   );
