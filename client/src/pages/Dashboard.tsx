@@ -37,6 +37,23 @@ function Dashboard() {
     fetchDashboard();
   }, []);
 
+  const handleToggleCompletion = async (
+    habitId: string,
+    completedToday: boolean,
+  ) => {
+    try {
+      await apiRequest(`/habits/${habitId}/complete`, {
+        method: completedToday ? "DELETE" : "POST",
+      });
+
+      // Refresh dashboard after completion changes
+      const data = await apiRequest("/dashboard");
+      setDashboard(data.dashboard);
+    } catch (error) {
+      console.error("Failed to update habit completion:", error);
+    }
+  };
+
   async function handleLogout() {
     try {
       await apiRequest("/auth/logout", {
@@ -97,14 +114,30 @@ function Dashboard() {
         ) : (
           <div className="space-y-3">
             {dashboard?.habits.map((habit) => (
-              <div key={habit._id} className="border rounded-lg p-4">
-                <h3 className="font-semibold">{habit.name}</h3>
+              <div
+                key={habit._id}
+                className="border rounded-lg p-4 flex items-center justify-between"
+              >
+                <div>
+                  <h3 className="font-semibold">{habit.name}</h3>
 
-                {habit.description && (
-                  <p className="text-gray-500 mt-1">{habit.description}</p>
-                )}
+                  {habit.description && (
+                    <p className="text-gray-500 mt-1">{habit.description}</p>
+                  )}
 
-                <p className="text-sm text-gray-400 mt-2">{habit.frequency}</p>
+                  <p className="text-sm text-gray-400 mt-2">
+                    {habit.frequency}
+                  </p>
+                </div>
+
+                <button
+                  onClick={() =>
+                    handleToggleCompletion(habit._id, habit.completedToday)
+                  }
+                  className="rounded-md border px-4 py-2"
+                >
+                  {habit.completedToday ? "✓ Completed" : "Complete"}
+                </button>
               </div>
             ))}
           </div>
