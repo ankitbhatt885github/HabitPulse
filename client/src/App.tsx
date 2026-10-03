@@ -8,6 +8,7 @@ import { setUser } from "./store/authSlice";
 import { apiRequest } from "./services/api";
 import { useEffect, useState } from "react";
 import ProtectedRoute from "./components/ProtectedRoute";
+import Habits from "./pages/Habits";
 
 function App() {
   const dispatch = useDispatch<AppDispatch>();
@@ -52,6 +53,15 @@ function App() {
           </ProtectedRoute>
         }
       />
+
+      <Route
+  path="/habits"
+  element={
+    <ProtectedRoute>
+      <Habits />
+    </ProtectedRoute>
+  }
+/>
 
       <Route path="*" element={<Navigate to="/login" replace />} />
     </Routes>
