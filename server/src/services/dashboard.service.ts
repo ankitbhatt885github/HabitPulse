@@ -25,11 +25,22 @@ export async function getDashboard(userId: string) {
 
   const today = getTodayDate();
 
-  //count of todays completions
-  const completedToday = await HabitCompletion.countDocuments({
+  // Get today's completed habits
+  const completedHabits = await HabitCompletion.find({
     user: userId,
     date: today,
-  });
+  }).select("habit");
+
+  // Store completed habit IDs for quick lookup
+  //store the habits in a set
+  const completedHabitIds = new Set(
+    completedHabits.map((completion) =>
+      completion.habit.toString()
+    )
+  );
+
+   // Count today's completions
+  const completedToday = completedHabits.length;
 
   const totalHabits = habits.length;
 
@@ -37,12 +48,22 @@ export async function getDashboard(userId: string) {
   const completionRate =
     totalHabits === 0 ? 0 : Math.round((completedToday / totalHabits) * 100);
 
+    // Add completedToday to every habit
+  const dashboardHabits = habits.map((habit) => ({
+    //keep existing properties in habit object as it is
+    //just add a new completedToday to it
+    ...habit.toObject(),
+    completedToday: completedHabitIds.has(
+      habit._id.toString()
+    ),
+  }));
+
   // Create dashboard response all the imp info
   const dashboard = {
     totalHabits,
     completedToday,
     completionRate,
-    habits,
+    habits: dashboardHabits,
   };
 
   // store this data in redis cache too -> for 60 seconds

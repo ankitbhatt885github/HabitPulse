@@ -7,6 +7,7 @@ export interface Habit {
   isActive: boolean;
   createdAt: string;
   updatedAt: string;
+  completedToday: boolean;
 }
 
 export interface DashboardData {
