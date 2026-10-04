@@ -24,6 +24,21 @@ function Habits() {
 
   const [isCreating, setIsCreating] = useState(false);
 
+  //holds id of the habit we are editing/updating
+  const [editingHabitId, setEditingHabitId] =
+  useState<string | null>(null);
+
+
+  const [editName, setEditName] = useState("");
+const [editDescription, setEditDescription] =
+  useState("");
+const [editFrequency, setEditFrequency] = useState<
+  "daily" | "weekly"
+>("daily");
+const [editColor, setEditColor] =
+  useState("#6366F1");
+
+
   useEffect(() => {
     const fetchHabits = async () => {
       try {
@@ -72,6 +87,66 @@ function Habits() {
       setIsCreating(false);
     }
   }
+
+  // Start editing a habit, basically just grab all details of the habit we are
+  //going to update
+  const handleStartEditing = (habit: Habit) => {
+    //grab the habit id of that card/habit
+    setEditingHabitId(habit._id);
+
+    //put all the existing data into the edit form
+    setEditName(habit.name);
+    setEditDescription(habit.description || "");
+    setEditFrequency(habit.frequency);
+    setEditColor(habit.color || "#6366F1");
+
+    setError("");
+  };
+
+  // Update habit
+  const handleUpdateHabit = async (
+    event: React.FormEvent
+  ) => {
+    event.preventDefault();
+
+    if (!editingHabitId) return;
+
+    try {
+      setError("");
+
+      const data = await apiRequest(
+        `/habits/${editingHabitId}`,
+        {
+          method: "PUT",
+          body: JSON.stringify({
+            name: editName,
+            description: editDescription,
+            frequency: editFrequency,
+            color: editColor,
+          }),
+        }
+      );
+
+      //go through all habits and only replace the edited one with updated habit
+      setHabits((currentHabits) =>
+        currentHabits.map((habit) =>
+          habit._id === editingHabitId
+            ? data.habit
+            : habit
+        )
+      );
+
+      setEditingHabitId(null);
+    } catch (error) {
+      setError(
+        error instanceof Error
+          ? error.message
+          : "Failed to update habit"
+      );
+    }
+  };
+
+
 
   if (isLoading) {
     return (
@@ -170,33 +245,144 @@ function Habits() {
         </form>
       )}
 
+
       {habits.length === 0 ? (
         <p className="text-gray-500">You don't have any habits yet.</p>
       ) : (
         <div className="space-y-3">
           {habits.map((habit) => (
-            <div key={habit._id} className="border rounded-lg p-4">
-              <div className="flex items-center justify-between">
-                <div>
-                  <h2 className="font-semibold">{habit.name}</h2>
-
-                  {habit.description && (
-                    <p className="text-gray-500 mt-1">{habit.description}</p>
-                  )}
-
-                  <p className="text-sm text-gray-400 mt-2">
-                    {habit.frequency}
-                  </p>
-                </div>
-
-                <span
-                  className={
-                    habit.isActive ? "text-green-600" : "text-gray-400"
-                  }
+            <div key={habit._id}>
+              {editingHabitId === habit._id ? (
+                /* Edit Form */
+                /* if editing is being done show edit form else show habit card */
+                <form
+                  onSubmit={handleUpdateHabit}
+                  className="border rounded-lg p-6 space-y-4"
                 >
-                  {habit.isActive ? "Active" : "Inactive"}
-                </span>
-              </div>
+                  <h2 className="text-xl font-semibold">
+                    Edit Habit
+                  </h2>
+
+                  <input
+                    type="text"
+                    value={editName}
+                    onChange={(event) =>
+                      setEditName(event.target.value)
+                    }
+                    className="w-full border rounded-md p-2"
+                    required
+                  />
+
+                  <textarea
+                    value={editDescription}
+                    onChange={(event) =>
+                      setEditDescription(
+                        event.target.value
+                      )
+                    }
+                    className="w-full border rounded-md p-2"
+                  />
+
+                  <select
+                    value={editFrequency}
+                    onChange={(event) =>
+                      setEditFrequency(
+                        event.target.value as
+                          | "daily"
+                          | "weekly"
+                      )
+                    }
+                    className="w-full border rounded-md p-2"
+                  >
+                    <option value="daily">
+                      Daily
+                    </option>
+
+                    <option value="weekly">
+                      Weekly
+                    </option>
+                  </select>
+
+                  <div>
+                    <label className="block mb-1">
+                      Color
+                    </label>
+
+                    <input
+                      type="color"
+                      value={editColor}
+                      onChange={(event) =>
+                        setEditColor(
+                          event.target.value
+                        )
+                      }
+                    />
+                  </div>
+
+                  <div className="flex gap-3">
+                    <button
+                      type="submit"
+                      className="rounded-md bg-black px-4 py-2 text-white"
+                    >
+                      Save Changes
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setEditingHabitId(null)
+                      }
+                      className="rounded-md border px-4 py-2"
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                </form>
+              ) : (
+                /* Habit Card */
+                <div className="border rounded-lg p-4">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <h2 className="font-semibold">
+                        {habit.name}
+                      </h2>
+
+                      {habit.description && (
+                        <p className="text-gray-500 mt-1">
+                          {habit.description}
+                        </p>
+                      )}
+
+                      <p className="text-sm text-gray-400 mt-2">
+                        {habit.frequency}
+                      </p>
+                    </div>
+
+                    <div className="flex items-center gap-3">
+                      <span
+                        className={
+                          habit.isActive
+                            ? "text-green-600"
+                            : "text-gray-400"
+                        }
+                      >
+                        {habit.isActive
+                          ? "Active"
+                          : "Inactive"}
+                      </span>
+
+                      <button
+                        onClick={() =>
+                          handleStartEditing(habit)
+                        }
+                        className="rounded-md border px-3 py-1"
+                      >
+                        Edit
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
           ))}
         </div>
