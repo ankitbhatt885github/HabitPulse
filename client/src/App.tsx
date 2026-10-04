@@ -9,6 +9,7 @@ import { apiRequest } from "./services/api";
 import { useEffect, useState } from "react";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Habits from "./pages/Habits";
+import HabitDetails from "./pages/HabitDetails";
 
 function App() {
   const dispatch = useDispatch<AppDispatch>();
@@ -55,13 +56,22 @@ function App() {
       />
 
       <Route
-  path="/habits"
-  element={
-    <ProtectedRoute>
-      <Habits />
-    </ProtectedRoute>
-  }
-/>
+        path="/habits"
+        element={
+          <ProtectedRoute>
+            <Habits />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/habits/:id"
+        element={
+          <ProtectedRoute>
+            <HabitDetails />
+          </ProtectedRoute>
+        }
+      />
 
       <Route path="*" element={<Navigate to="/login" replace />} />
     </Routes>
