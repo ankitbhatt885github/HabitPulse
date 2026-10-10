@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { apiRequest } from "../services/api";
+import { useNavigate } from "react-router-dom";
 
 interface Habit {
   _id: string;
@@ -33,6 +34,8 @@ function Habits() {
     "daily",
   );
   const [editColor, setEditColor] = useState("#6366F1");
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchHabits = async () => {
@@ -341,6 +344,15 @@ function Habits() {
                       >
                         {habit.isActive ? "Active" : "Inactive"}
                       </span>
+
+                      <button
+  onClick={() =>
+    navigate(`/habits/${habit._id}`)
+  }
+  className="rounded-md border px-3 py-1"
+>
+  Details
+</button>
 
                       <button
                         onClick={() => handleStartEditing(habit)}

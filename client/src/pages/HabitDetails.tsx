@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams , useNavigate } from "react-router-dom";
 import { apiRequest } from "../services/api";
 
 interface HabitStats {
@@ -36,6 +36,8 @@ function HabitDetails() {
   const [error, setError] = useState("");
 
   const [completions, setCompletions] = useState<Completion[]>([]);
+
+  const navigate = useNavigate();
 
   //get the habit and get its stats parallelly so promise.all
   useEffect(() => {
@@ -84,6 +86,12 @@ function HabitDetails() {
 
   return (
     <div className="min-h-screen p-8">
+        <button
+  onClick={() => navigate("/habits")}
+  className="mb-6 rounded-md border px-4 py-2"
+>
+  ← Back to Habits
+</button>
       <div>
         <h1 className="text-3xl font-bold">{habit?.name}</h1>
 
