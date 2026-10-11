@@ -1,13 +1,11 @@
-import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import type { RootState, AppDispatch } from "../store/store";
-import { clearUser } from "../store/authSlice";
 import { apiRequest } from "../services/api";
+import { useSelector } from "react-redux";
+import type { RootState } from "../store/store";
 import type { DashboardData } from "../types/dashboard";
 import { useState, useEffect } from "react";
 
 function Dashboard() {
-  const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const user = useSelector((state: RootState) => state.auth.user);
@@ -54,55 +52,46 @@ function Dashboard() {
     }
   };
 
-  async function handleLogout() {
-    try {
-      await apiRequest("/auth/logout", {
-        method: "POST",
-      });
-
-      dispatch(clearUser());
-      navigate("/login");
-    } catch {
-      console.error("Logout failed:", error);
-    }
-  }
-
   return (
-    <div className="min-h-screen p-8">
+    <div className="space-y-8">
       <div className="flex items-center justify-between">
         <div>
-          
-
-          <p className="mt-2">Welcome, {user?.name} 👋</p>
-        </div>
-
+  <h1 className="text-3xl font-bold tracking-tight text-gray-900">
+    Welcome, {user?.name} 👋
+  </h1>
+  <p className="mt-2 text-gray-500">
+    Here's your progress for today.
+  </p>
+</div>
         
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
         <div className="border rounded-lg p-5">
-          <p className="text-gray-500">Total Habits</p>
+          <p className="text-sm font-medium text-gray-500">Total Habits</p>
 
-          <p className="text-3xl font-bold mt-2">{dashboard?.totalHabits}</p>
+          <p className="mt-2 text-3xl font-bold tracking-tight text-gray-900">{dashboard?.totalHabits}</p>
         </div>
 
         <div className="border rounded-lg p-5">
-          <p className="text-gray-500">Completed Today</p>
+          <p className="text-sm font-medium text-gray-500">Completed Today</p>
 
-          <p className="text-3xl font-bold mt-2">{dashboard?.completedToday}</p>
+          <p className="mt-2 text-3xl font-bold tracking-tight text-gray-900">{dashboard?.completedToday}</p>
         </div>
 
         <div className="border rounded-lg p-5">
-          <p className="text-gray-500">Completion Rate</p>
+          <p className="text-sm font-medium text-gray-500">Completion Rate</p>
 
-          <p className="text-3xl font-bold mt-2">
+          <p className="mt-2 text-3xl font-bold tracking-tight text-gray-900">
             {dashboard?.completionRate}%
           </p>
         </div>
       </div>
 
       <div>
-        <h2 className="text-2xl font-bold mb-4">Today's Habits</h2>
+        <h2 className="text-xl font-semibold tracking-tight text-gray-900 mb-4">
+  Today's Habits
+</h2>
 
         {dashboard?.habits.length === 0 ? (
           <p className="text-gray-500">You don't have any habits yet.</p>
@@ -111,25 +100,29 @@ function Dashboard() {
             {dashboard?.habits.map((habit) => (
               <div
                 key={habit._id}
-                className="border rounded-lg p-4 flex items-center justify-between"
+                className="flex flex-col gap-4 rounded-xl border border-gray-200 bg-white p-5 shadow-sm sm:flex-row sm:items-center sm:justify-between"
               >
                 <div>
-                  <h3 className="font-semibold">{habit.name}</h3>
+                  <h3 className="font-semibold text-gray-900">{habit.name}</h3>
 
                   {habit.description && (
-                    <p className="text-gray-500 mt-1">{habit.description}</p>
+                    <p className="mt-1 text-sm text-gray-500">{habit.description}</p>
                   )}
 
-                  <p className="text-sm text-gray-400 mt-2">
-                    {habit.frequency}
-                  </p>
+                  <p className="mt-2 text-xs font-medium uppercase tracking-wide text-gray-400">
+  {habit.frequency}
+</p>
                 </div>
 
                 <button
                   onClick={() =>
                     handleToggleCompletion(habit._id, habit.completedToday)
                   }
-                  className="rounded-md border px-4 py-2"
+                  className={`rounded-lg px-4 py-2 text-sm font-medium transition-colors ${
+  habit.completedToday
+    ? "bg-green-50 text-green-700 hover:bg-green-100"
+    : "bg-indigo-600 text-white hover:bg-indigo-700"
+}`}
                 >
                   {habit.completedToday ? "✓ Completed" : "Complete"}
                 </button>
