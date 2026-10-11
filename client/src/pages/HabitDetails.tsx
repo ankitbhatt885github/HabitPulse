@@ -50,6 +50,13 @@ function HabitDetails() {
 
   const navigate = useNavigate();
 
+  //for dependency
+  const [allHabits, setAllHabits] = useState<Habit[]>([]);
+
+  const [selectedHabitId, setSelectedHabitId] = useState("");
+
+  const [isAddingDependency, setIsAddingDependency] = useState(false);
+
   //get the habit and get its stats parallelly so promise.all
   useEffect(() => {
     const fetchHabitDetails = async () => {
@@ -58,17 +65,25 @@ function HabitDetails() {
       try {
         setError("");
 
-        const [habitData, statsData, completionsData, dependenciesData] = await Promise.all([
+        const [
+          habitData,
+          statsData,
+          completionsData,
+          dependenciesData,
+          habitsData,
+        ] = await Promise.all([
           apiRequest(`/habits/${id}`),
           apiRequest(`/dashboard/habits/${id}/stats`),
           apiRequest(`/habits/${id}/completions`),
           apiRequest(`/habits/${id}/dependencies`),
+          apiRequest("/habits"),
         ]);
 
         setHabit(habitData.habit);
         setStats(statsData.stats);
         setCompletions(completionsData.completions);
         setDependencies(dependenciesData.dependencies);
+        setAllHabits(habitsData.habits);
       } catch (error) {
         setError(
           error instanceof Error ? error.message : "Failed to load habit",
@@ -80,6 +95,60 @@ function HabitDetails() {
 
     fetchHabitDetails();
   }, [id]);
+
+  //add a dependency
+  const handleAddDependency = async (event: React.FormEvent) => {
+    event.preventDefault();
+
+    if (!id || !selectedHabitId) return;
+
+    try {
+      setIsAddingDependency(true);
+      setError("");
+
+      await apiRequest(`/habits/${id}/dependencies`, {
+        method: "POST",
+        body: JSON.stringify({
+          dependsOn: selectedHabitId,
+        }),
+      });
+
+      // Fetch dependencies with populated habit details
+      const data = await apiRequest(`/habits/${id}/dependencies`);
+
+      setDependencies(data.dependencies);
+      setSelectedHabitId("");
+    } catch (error) {
+      setError(
+        error instanceof Error ? error.message : "Failed to add dependency",
+      );
+    } finally {
+      setIsAddingDependency(false);
+    }
+  };
+
+  //delete dependency
+  const handleRemoveDependency = async (dependencyId: string) => {
+    if (!id) return;
+
+    try {
+      setError("");
+
+      await apiRequest(`/habits/${id}/dependencies/${dependencyId}`, {
+        method: "DELETE",
+      });
+
+      setDependencies((currentDependencies) =>
+        currentDependencies.filter(
+          (dependency) => dependency._id !== dependencyId,
+        ),
+      );
+    } catch (error) {
+      setError(
+        error instanceof Error ? error.message : "Failed to remove dependency",
+      );
+    }
+  };
 
   if (isLoading) {
     return (
@@ -166,33 +235,66 @@ function HabitDetails() {
         )}
       </div>
       <div className="mt-8">
-  <h2 className="text-2xl font-bold mb-4">
-    Dependencies
-  </h2>
+        <h2 className="text-2xl font-bold mb-4">Dependencies</h2>
 
-  {dependencies.length === 0 ? (
-    <p className="text-gray-500">
-      This habit has no dependencies.
-    </p>
-  ) : (
-    <div className="space-y-3">
-      {dependencies.map((dependency) => (
-        <div
-          key={dependency._id}
-          className="border rounded-lg p-4"
-        >
-          <p className="text-sm text-gray-500">
-            Depends on
-          </p>
+        <form onSubmit={handleAddDependency} className="flex gap-3 mb-6">
+          <select
+            value={selectedHabitId}
+            onChange={(event) => setSelectedHabitId(event.target.value)}
+            className="flex-1 border rounded-md p-2"
+            required
+          >
+            <option value="">Select a habit</option>
 
-          <p className="font-semibold mt-1">
-            {dependency.dependsOn.name}
-          </p>
-        </div>
-      ))}
-    </div>
-  )}
-</div>
+            {allHabits
+              .filter((item) => item._id !== id)
+              .map((item) => (
+                <option key={item._id} value={item._id}>
+                  {item.name}
+                </option>
+              ))}
+          </select>
+
+          <button
+            type="submit"
+            disabled={isAddingDependency}
+            className="rounded-md bg-black px-4 py-2 text-white"
+          >
+            {isAddingDependency ? "Adding..." : "Add Dependency"}
+          </button>
+        </form>
+
+        {dependencies.length === 0 ? (
+          <p className="text-gray-500">This habit has no dependencies.</p>
+        ) : (
+          <div className="space-y-3">
+            {dependencies.map((dependency) => (
+              
+                <div
+                  key={dependency._id}
+                  className="border rounded-lg p-4 flex items-center justify-between gap-4"
+                >
+                  <div>
+                    <p className="text-sm text-gray-500">Depends on</p>
+
+                    <p className="font-semibold mt-1">
+                      {dependency.dependsOn.name}
+                    </p>
+                  </div>
+
+                  <button
+                    type="button"
+                    onClick={() => handleRemoveDependency(dependency._id)}
+                    className="rounded-md border border-red-300 px-3 py-1 text-red-600 hover:bg-red-50"
+                  >
+                    Remove
+                  </button>
+                </div>
+              
+            ))}
+          </div>
+        )}
+      </div>
     </div>
   );
 }
