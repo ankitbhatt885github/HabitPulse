@@ -71,17 +71,12 @@ function Dashboard() {
     <div className="min-h-screen p-8">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold">HabitPulse</h1>
+          
 
           <p className="mt-2">Welcome, {user?.name} 👋</p>
         </div>
 
-        <button
-          onClick={handleLogout}
-          className="rounded-md bg-black px-4 py-2 text-white"
-        >
-          Logout
-        </button>
+        
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">

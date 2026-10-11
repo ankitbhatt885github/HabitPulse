@@ -77,6 +77,7 @@ function Habits() {
       setDescription("");
       setFrequency("daily");
       setColor("#6366F1");
+      setShowForm(false);
     } catch (error) {
       setError(
         error instanceof Error ? error.message : "Failed to create habit",
@@ -153,6 +154,32 @@ function Habits() {
     }
   }
 
+  //toggle habit isActive status to pause a habit
+  const handleToggleActive = async (habit: Habit) => {
+    try {
+      setError("");
+
+      const data = await apiRequest(`/habits/${habit._id}`, {
+        method: "PUT",
+        body: JSON.stringify({
+          isActive: !habit.isActive,
+        }),
+      });
+
+      setHabits((currentHabits) =>
+        currentHabits.map((item) =>
+          item._id === habit._id ? data.habit : item,
+        ),
+      );
+    } catch (error) {
+      setError(
+        error instanceof Error
+          ? error.message
+          : "Failed to update habit status",
+      );
+    }
+  };
+
   if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -170,7 +197,7 @@ function Habits() {
   }
 
   return (
-    <div className="min-h-screen p-8">
+    <div className="space-y-6">
       <div className="flex items-center justify-between mb-8">
         <div>
           <h1 className="text-3xl font-bold">My Habits</h1>
@@ -320,7 +347,13 @@ function Habits() {
                 </form>
               ) : (
                 /* Habit Card */
-                <div className="border rounded-lg p-4">
+                <div
+  className="rounded-xl border bg-white p-5 shadow-sm"
+  style={{
+    borderLeftWidth: "4px",
+    borderLeftColor: habit.color || "#6366F1",
+  }}
+>
                   <div className="flex items-center justify-between">
                     <div>
                       <h2 className="font-semibold">{habit.name}</h2>
@@ -336,7 +369,7 @@ function Habits() {
                       </p>
                     </div>
 
-                    <div className="flex items-center gap-3">
+                    <div className="flex flex-wrap items-center gap-2">
                       <span
                         className={
                           habit.isActive ? "text-green-600" : "text-gray-400"
@@ -346,13 +379,11 @@ function Habits() {
                       </span>
 
                       <button
-  onClick={() =>
-    navigate(`/habits/${habit._id}`)
-  }
-  className="rounded-md border px-3 py-1"
->
-  Details
-</button>
+                        onClick={() => navigate(`/habits/${habit._id}`)}
+                        className="rounded-md border px-3 py-1"
+                      >
+                        Details
+                      </button>
 
                       <button
                         onClick={() => handleStartEditing(habit)}
@@ -366,6 +397,14 @@ function Habits() {
                         className="rounded-md border px-3 py-1 text-red-500"
                       >
                         Delete
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={() => handleToggleActive(habit)}
+                        className="rounded-md border px-3 py-1"
+                      >
+                        {habit.isActive ? "Deactivate" : "Activate"}
                       </button>
                     </div>
                   </div>

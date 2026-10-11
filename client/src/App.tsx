@@ -10,6 +10,7 @@ import { useEffect, useState } from "react";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Habits from "./pages/Habits";
 import HabitDetails from "./pages/HabitDetails";
+import AppLayout from "./layout/AppLayout";
 
 function App() {
   const dispatch = useDispatch<AppDispatch>();
@@ -42,39 +43,29 @@ function App() {
 
   return (
     <Routes>
-      <Route path="/login" element={<Login />} />
+  <Route path="/login" element={<Login />} />
+  <Route path="/register" element={<Register />} />
 
-      <Route path="/register" element={<Register />} />
+  <Route
+    element={
+      <ProtectedRoute>
+        <AppLayout />
+      </ProtectedRoute>
+    }
+  >
+    <Route path="/dashboard" element={<Dashboard />} />
+    <Route path="/habits" element={<Habits />} />
+    <Route
+      path="/habits/:id"
+      element={<HabitDetails />}
+    />
+  </Route>
 
-      <Route
-        path="/dashboard"
-        element={
-          <ProtectedRoute>
-            <Dashboard />
-          </ProtectedRoute>
-        }
-      />
-
-      <Route
-        path="/habits"
-        element={
-          <ProtectedRoute>
-            <Habits />
-          </ProtectedRoute>
-        }
-      />
-
-      <Route
-        path="/habits/:id"
-        element={
-          <ProtectedRoute>
-            <HabitDetails />
-          </ProtectedRoute>
-        }
-      />
-
-      <Route path="*" element={<Navigate to="/login" replace />} />
-    </Routes>
+  <Route
+    path="*"
+    element={<Navigate to="/dashboard" replace />}
+  />
+</Routes>
   );
 }
 

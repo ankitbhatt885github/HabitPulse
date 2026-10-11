@@ -96,6 +96,7 @@ function HabitDetails() {
     fetchHabitDetails();
   }, [id]);
 
+
   //add a dependency
   const handleAddDependency = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -158,22 +159,24 @@ function HabitDetails() {
     );
   }
 
-  if (error) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <p className="text-red-500">{error}</p>
-      </div>
-    );
-  }
+  {error && (
+  <p
+    role="alert"
+    className="rounded-md border border-red-200 bg-red-50 p-3 text-red-700"
+  >
+    {error}
+  </p>
+)}
 
   return (
-    <div className="min-h-screen p-8">
+    <div className="space-y-8">
       <button
-        onClick={() => navigate("/habits")}
-        className="mb-6 rounded-md border px-4 py-2"
-      >
-        ← Back to Habits
-      </button>
+  type="button"
+  onClick={() => navigate("/habits")}
+  className="rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
+>
+  ← Back to Habits
+</button>
       <div>
         <h1 className="text-3xl font-bold">{habit?.name}</h1>
 
@@ -184,26 +187,26 @@ function HabitDetails() {
         <p className="text-sm text-gray-400 mt-2">{habit?.frequency}</p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mt-8">
-        <div className="border rounded-lg p-5">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
           <p className="text-gray-500">Total Completions</p>
 
           <p className="text-3xl font-bold mt-2">{stats?.totalCompletions}</p>
         </div>
 
-        <div className="border rounded-lg p-5">
+        <div className="rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
           <p className="text-gray-500">Current Streak</p>
 
           <p className="text-3xl font-bold mt-2">🔥 {stats?.currentStreak}</p>
         </div>
 
-        <div className="border rounded-lg p-5">
+        <div className="rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
           <p className="text-gray-500">Longest Streak</p>
 
           <p className="text-3xl font-bold mt-2">🏆 {stats?.longestStreak}</p>
         </div>
 
-        <div className="border rounded-lg p-5">
+        <div className="rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
           <p className="text-gray-500">Completion Rate</p>
 
           <p className="text-3xl font-bold mt-2">{stats?.completionRate}%</p>
@@ -220,7 +223,7 @@ function HabitDetails() {
             {completions.map((completion) => (
               <div
                 key={completion._id}
-                className="border rounded-lg p-4 flex items-center justify-between"
+                className="flex items-center justify-between gap-4 rounded-xl border border-gray-200 bg-white p-4 shadow-sm"
               >
                 <div>
                   <p className="font-medium">{completion.date}</p>
@@ -258,7 +261,7 @@ function HabitDetails() {
           <button
             type="submit"
             disabled={isAddingDependency}
-            className="rounded-md bg-black px-4 py-2 text-white"
+            className="rounded-md bg-indigo-600 px-4 py-2 text-white hover:bg-indigo-700 disabled:cursor-not-allowed disabled:opacity-50"
           >
             {isAddingDependency ? "Adding..." : "Add Dependency"}
           </button>
@@ -272,7 +275,7 @@ function HabitDetails() {
               
                 <div
                   key={dependency._id}
-                  className="border rounded-lg p-4 flex items-center justify-between gap-4"
+                  className="flex items-center justify-between gap-4 rounded-xl border border-gray-200 bg-white p-4 shadow-sm"
                 >
                   <div>
                     <p className="text-sm text-gray-500">Depends on</p>
