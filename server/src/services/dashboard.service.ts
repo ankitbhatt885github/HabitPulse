@@ -29,6 +29,7 @@ export async function getDashboard(userId: string) {
   const completedHabits = await HabitCompletion.find({
     user: userId,
     date: today,
+    habit: { $in: habits.map((habit) => habit._id) },
   }).select("habit");
 
   // Store completed habit IDs for quick lookup

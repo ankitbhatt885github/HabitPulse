@@ -204,7 +204,7 @@ function Habits() {
     setShowForm(true);
     setError("");
   }}
-  className="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700"
+  className="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700 disabled:cursor-not-allowed disabled:opacity-60"
 >
   + Create Habit
 </button>
@@ -222,7 +222,7 @@ function Habits() {
       {showForm && (
         <form
           onSubmit={handleCreateHabit}
-          className="border rounded-lg p-6 mb-8 space-y-4"
+          className="space-y-4 rounded-xl border border-gray-200 bg-white p-6 shadow-sm"
         >
           <h2 className="text-xl font-semibold">Create Habit</h2>
 
@@ -231,7 +231,7 @@ function Habits() {
             placeholder="Habit name"
             value={name}
             onChange={(event) => setName(event.target.value)}
-            className="w-full border rounded-md p-2"
+            className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100"
             required
           />
 
@@ -239,7 +239,7 @@ function Habits() {
             placeholder="Description"
             value={description}
             onChange={(event) => setDescription(event.target.value)}
-            className="w-full border rounded-md p-2"
+            className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100"
           />
 
           <select
@@ -267,7 +267,7 @@ function Habits() {
             <button
               type="submit"
               disabled={isCreating}
-              className="rounded-md bg-black px-4 py-2 text-white"
+              className="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700 disabled:cursor-not-allowed disabled:opacity-60"
             >
               {isCreating ? "Creating..." : "Create Habit"}
             </button>
@@ -294,7 +294,7 @@ function Habits() {
                 /* if editing is being done show edit form else show habit card */
                 <form
                   onSubmit={handleUpdateHabit}
-                  className="border rounded-lg p-6 space-y-4"
+                  className="space-y-4 rounded-xl border border-gray-200 bg-white p-6 shadow-sm"
                 >
                   <h2 className="text-xl font-semibold">Edit Habit</h2>
 
@@ -302,14 +302,14 @@ function Habits() {
                     type="text"
                     value={editName}
                     onChange={(event) => setEditName(event.target.value)}
-                    className="w-full border rounded-md p-2"
+                    className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100"
                     required
                   />
 
                   <textarea
                     value={editDescription}
                     onChange={(event) => setEditDescription(event.target.value)}
-                    className="w-full border rounded-md p-2"
+                    className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100"
                   />
 
                   <select
@@ -337,7 +337,7 @@ function Habits() {
                   <div className="flex gap-3">
                     <button
                       type="submit"
-                      className="rounded-md bg-black px-4 py-2 text-white"
+                      className="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700 disabled:cursor-not-allowed disabled:opacity-60"
                     >
                       Save Changes
                     </button>
@@ -360,9 +360,9 @@ function Habits() {
     borderLeftColor: habit.color || "#6366F1",
   }}
 >
-                  <div className="flex items-center justify-between">
+                  <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                     <div>
-                      <h2 className="font-semibold">{habit.name}</h2>
+                      <h2 className="font-semibold text-gray-900">{habit.name}</h2>
 
                       {habit.description && (
                         <p className="text-gray-500 mt-1">
@@ -370,9 +370,9 @@ function Habits() {
                         </p>
                       )}
 
-                      <p className="text-sm text-gray-400 mt-2">
-                        {habit.frequency}
-                      </p>
+                     <p className="mt-2 text-xs font-medium uppercase tracking-wide text-gray-400">
+  {habit.frequency}
+</p>
                     </div>
 
                     <div className="flex flex-wrap items-center gap-2">
@@ -386,21 +386,21 @@ function Habits() {
 
                       <button
                         onClick={() => navigate(`/habits/${habit._id}`)}
-                        className="rounded-md border px-3 py-1"
+                        className="rounded-lg border border-gray-200 px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
                       >
                         Details
                       </button>
 
                       <button
                         onClick={() => handleStartEditing(habit)}
-                        className="rounded-md border px-3 py-1"
+                        className="rounded-lg border border-gray-200 px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
                       >
                         Edit
                       </button>
 
                       <button
                         onClick={() => handleDeleteHabit(habit._id)}
-                        className="rounded-md border px-3 py-1 text-red-500"
+                        className="rounded-lg border border-red-200 px-3 py-2 text-sm font-medium text-red-600 hover:bg-red-50"
                       >
                         Delete
                       </button>
@@ -408,7 +408,7 @@ function Habits() {
                       <button
                         type="button"
                         onClick={() => handleToggleActive(habit)}
-                        className="rounded-md border px-3 py-1"
+                        className="rounded-lg border border-gray-200 px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
                       >
                         {habit.isActive ? "Deactivate" : "Activate"}
                       </button>
