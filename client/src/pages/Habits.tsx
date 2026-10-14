@@ -188,14 +188,6 @@ function Habits() {
     );
   }
 
-  if (error) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <p className="text-red-500">{error}</p>
-      </div>
-    );
-  }
-
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between mb-8">
@@ -206,12 +198,26 @@ function Habits() {
         </div>
 
         <button
-          onClick={() => setShowForm(true)}
-          className="rounded-md bg-black px-4 py-2 text-white"
-        >
-          + Create Habit
-        </button>
+  type="button"
+  onClick={() => {
+    setEditingHabitId(null);
+    setShowForm(true);
+    setError("");
+  }}
+  className="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700"
+>
+  + Create Habit
+</button>
       </div>
+
+      {error && (
+  <p
+    role="alert"
+    className="rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-700"
+  >
+    {error}
+  </p>
+)}
 
       {showForm && (
         <form
