@@ -181,12 +181,12 @@ function Habits() {
   };
 
   if (isLoading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <p>Loading habits...</p>
-      </div>
-    );
-  }
+  return (
+    <div className="flex min-h-[50vh] items-center justify-center">
+      <p className="text-sm text-gray-500">Loading your habits...</p>
+    </div>
+  );
+}
 
   return (
     <div className="space-y-6">
@@ -284,7 +284,21 @@ function Habits() {
       )}
 
       {habits.length === 0 ? (
-        <p className="text-gray-500">You don't have any habits yet.</p>
+        <div className="rounded-xl border border-dashed border-gray-300 bg-white px-6 py-10 text-center">
+  <h3 className="font-semibold text-gray-900">No habits yet</h3>
+
+  <p className="mt-2 text-sm text-gray-500">
+    Create your first habit and start building a routine.
+  </p>
+
+  <button
+    type="button"
+    onClick={() => setShowForm(true)}
+    className="mt-5 rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700"
+  >
+    + Create your first habit
+  </button>
+</div>
       ) : (
         <div className="space-y-3">
           {habits.map((habit) => (
