@@ -261,7 +261,7 @@ function HabitDetails() {
           <button
             type="submit"
             disabled={isAddingDependency}
-            className="rounded-md bg-indigo-600 px-4 py-2 text-white hover:bg-indigo-700 disabled:cursor-not-allowed disabled:opacity-50"
+            className="rounded-md bg-yellow-600 px-4 py-2 text-gray-950 hover:bg-yellow-700 disabled:cursor-not-allowed disabled:opacity-50"
           >
             {isAddingDependency ? "Adding..." : "Add Dependency"}
           </button>

@@ -27,7 +27,7 @@ function AppLayout() {
   const linkClass = ({ isActive }: { isActive: boolean }) =>
     `rounded-lg px-4 py-2 text-sm font-medium transition-colors ${
       isActive
-        ? "bg-indigo-50 text-indigo-700 shadow-sm"
+        ? "bg-yellow-50 text-yellow-800 shadow-sm"
         : "text-gray-600 hover:bg-gray-100 hover:text-gray-900"
     }`;
 
@@ -42,12 +42,12 @@ function AppLayout() {
             to="/dashboard"
             className="flex shrink-0 items-center gap-2.5"
           >
-            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-indigo-600 text-lg font-bold text-white shadow-sm">
+            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-yellow-600 text-lg font-bold text-gray-950 shadow-sm">
               H
             </div>
 
             <span className="text-xl font-bold tracking-tight text-gray-900">
-              Habit<span className="text-indigo-600">Pulse</span>
+              Habit<span className="text-yellow-600">Pulse</span>
             </span>
           </NavLink>
 
@@ -65,7 +65,7 @@ function AppLayout() {
           {/* User profile and logout */}
           <div className="flex shrink-0 items-center gap-2 sm:gap-3">
             <div className="flex items-center gap-2.5 rounded-xl border border-gray-100 bg-white px-2 py-1.5 sm:px-3">
-              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-indigo-100 text-sm font-bold text-indigo-700 ring-2 ring-white">
+              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-yellow-100 text-sm font-bold text-yellow-800 ring-2 ring-white">
                 {initial}
               </div>
 
@@ -82,7 +82,7 @@ function AppLayout() {
               onClick={handleLogout}
               title="Log out"
               aria-label="Log out"
-              className="flex items-center gap-2 rounded-xl border border-gray-200 px-3 py-2.5 text-sm font-medium text-gray-600 transition-colors hover:border-red-200 hover:bg-red-50 hover:text-red-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2"
+              className="flex items-center gap-2 rounded-xl border border-gray-200 px-3 py-2.5 text-sm font-medium text-gray-600 transition-colors hover:border-red-200 hover:bg-red-50 hover:text-red-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-yellow-500 focus-visible:ring-offset-2"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"

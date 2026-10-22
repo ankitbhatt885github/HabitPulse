@@ -87,36 +87,65 @@ function Dashboard() {
       </div>
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-        <div className="border rounded-lg p-5">
-          <p className="text-sm font-medium text-gray-500">Total Habits</p>
-
-          <p className="mt-2 text-3xl font-bold tracking-tight text-gray-900">
+        <div className="rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
+          <div className="flex items-start justify-between">
+            <div>
+              <p className="text-sm font-medium text-gray-500">Total Habits</p>
+              <p className="mt-1 text-xs text-gray-400">Active routines</p>
+            </div>
+            <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-yellow-50 text-lg">
+              🎯
+            </span>
+          </div>
+          <p className="mt-5 text-4xl font-bold tracking-tight text-gray-900">
             {dashboard?.totalHabits}
           </p>
+          <p className="mt-2 text-sm text-gray-500">Keep building consistency</p>
         </div>
 
-        <div className="border rounded-lg p-5">
-          <p className="text-sm font-medium text-gray-500">Completed Today</p>
-
-          <p className="mt-2 text-3xl font-bold tracking-tight text-gray-900">
-            {dashboard?.completedToday}
+        <div className="rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
+          <div className="flex items-start justify-between">
+            <div>
+              <p className="text-sm font-medium text-gray-500">Completed Today</p>
+              <p className="mt-1 text-xs text-gray-400">Today's progress</p>
+            </div>
+            <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-emerald-50 text-lg">
+              ✓
+            </span>
+          </div>
+          <p className="mt-5 text-4xl font-bold tracking-tight text-gray-900">
+            {dashboard?.completedToday ?? 0}
+            <span className="ml-1 text-lg font-medium text-gray-400">
+              / {dashboard?.totalHabits ?? 0}
+            </span>
+          </p>
+          <p className="mt-2 text-sm text-gray-500">
+            {Math.max(0, (dashboard?.totalHabits ?? 0) - (dashboard?.completedToday ?? 0))} remaining
           </p>
         </div>
 
-        <div className="border rounded-lg p-5">
-          <p className="text-sm font-medium text-gray-500">Completion Rate</p>
-
-          <p className="mt-2 text-3xl font-bold tracking-tight text-gray-900">
+        <div className="rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
+          <div className="flex items-start justify-between">
+            <div>
+              <p className="text-sm font-medium text-gray-500">Completion Rate</p>
+              <p className="mt-1 text-xs text-gray-400">Across today's habits</p>
+            </div>
+            <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-violet-50 text-lg">
+              📈
+            </span>
+          </div>
+          <p className="mt-5 text-4xl font-bold tracking-tight text-gray-900">
             {dashboard?.completionRate}%
           </p>
-          <div className="mt-4 h-2 overflow-hidden rounded-full border border-slate-600 bg-gray-100">
+          <div className="mt-4 h-2 overflow-hidden rounded-full bg-gray-100">
             <div
-              className="h-full rounded-full bg-indigo-600 transition-all"
+              className="h-full rounded-full bg-yellow-600 transition-all"
               style={{
                 width: `${Math.min(100, Math.max(0, dashboard?.completionRate ?? 0))}%`,
               }}
             />
           </div>
+          <p className="mt-2 text-sm text-gray-500">Keep up the momentum</p>
         </div>
       </div>
 
@@ -145,7 +174,7 @@ function Dashboard() {
             <button
               type="button"
               onClick={() => navigate("/habits")}
-              className="mt-5 rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700"
+              className="mt-5 rounded-lg bg-yellow-600 px-4 py-2 text-sm font-medium text-gray-950 hover:bg-yellow-700"
             >
               Create your first habit
             </button>
@@ -180,7 +209,7 @@ function Dashboard() {
                   className={`rounded-lg px-4 py-2 text-sm font-medium transition-colors disabled:cursor-not-allowed disabled:opacity-60 ${
                     habit.completedToday
                       ? "bg-green-50 text-green-700 hover:bg-green-100"
-                      : "bg-indigo-600 text-white hover:bg-indigo-700"
+                      : "bg-yellow-600 text-gray-950 hover:bg-yellow-700"
                   }`}
                 >
                   {updatingHabitId === habit._id

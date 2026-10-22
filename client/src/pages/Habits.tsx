@@ -204,7 +204,7 @@ function Habits() {
     setShowForm(true);
     setError("");
   }}
-  className="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700 disabled:cursor-not-allowed disabled:opacity-60"
+  className="rounded-lg bg-yellow-600 px-4 py-2 text-sm font-medium text-gray-950 hover:bg-yellow-700 disabled:cursor-not-allowed disabled:opacity-60"
 >
   + Create Habit
 </button>
@@ -231,7 +231,7 @@ function Habits() {
             placeholder="Habit name"
             value={name}
             onChange={(event) => setName(event.target.value)}
-            className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100"
+            className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm outline-none focus:border-yellow-500 focus:ring-2 focus:ring-yellow-100"
             required
           />
 
@@ -239,7 +239,7 @@ function Habits() {
             placeholder="Description"
             value={description}
             onChange={(event) => setDescription(event.target.value)}
-            className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100"
+            className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm outline-none focus:border-yellow-500 focus:ring-2 focus:ring-yellow-100"
           />
 
           <select
@@ -267,7 +267,7 @@ function Habits() {
             <button
               type="submit"
               disabled={isCreating}
-              className="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700 disabled:cursor-not-allowed disabled:opacity-60"
+              className="rounded-lg bg-yellow-600 px-4 py-2 text-sm font-medium text-gray-950 hover:bg-yellow-700 disabled:cursor-not-allowed disabled:opacity-60"
             >
               {isCreating ? "Creating..." : "Create Habit"}
             </button>
@@ -294,7 +294,7 @@ function Habits() {
   <button
     type="button"
     onClick={() => setShowForm(true)}
-    className="mt-5 rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700"
+    className="mt-5 rounded-lg bg-yellow-600 px-4 py-2 text-sm font-medium text-gray-950 hover:bg-yellow-700"
   >
     + Create your first habit
   </button>
@@ -316,14 +316,14 @@ function Habits() {
                     type="text"
                     value={editName}
                     onChange={(event) => setEditName(event.target.value)}
-                    className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100"
+                    className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm outline-none focus:border-yellow-500 focus:ring-2 focus:ring-yellow-100"
                     required
                   />
 
                   <textarea
                     value={editDescription}
                     onChange={(event) => setEditDescription(event.target.value)}
-                    className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100"
+                    className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm outline-none focus:border-yellow-500 focus:ring-2 focus:ring-yellow-100"
                   />
 
                   <select
@@ -351,7 +351,7 @@ function Habits() {
                   <div className="flex gap-3">
                     <button
                       type="submit"
-                      className="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700 disabled:cursor-not-allowed disabled:opacity-60"
+                      className="rounded-lg bg-yellow-600 px-4 py-2 text-sm font-medium text-gray-950 hover:bg-yellow-700 disabled:cursor-not-allowed disabled:opacity-60"
                     >
                       Save Changes
                     </button>
